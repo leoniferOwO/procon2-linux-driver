@@ -1,4 +1,4 @@
-# 🎮 procon2-xbox-driver
+# 🎮 procon2-linux-driver
 
 **Use the Nintendo Switch 2 Pro Controller on Linux as if it were an Xbox 360 controller.**
 
