@@ -1,0 +1,4 @@
+# Start the user bridge service whenever the Switch 2 Pro Controller is plugged in via USB
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="2069", TAG+="uaccess", TAG+="systemd", ENV{SYSTEMD_USER_WANTS}+="procon2-xbox.service"
+# Let the logged-in user create the virtual Xbox pad
+KERNEL=="uinput", SUBSYSTEM=="misc", TAG+="uaccess", OPTIONS+="static_node=uinput"

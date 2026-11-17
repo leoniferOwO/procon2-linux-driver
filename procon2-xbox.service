@@ -1,0 +1,7 @@
+[Unit]
+Description=Switch 2 Pro Controller -> Xbox 360 bridge
+
+[Service]
+ExecStart=/usr/bin/env python3 %h/.local/bin/procon2_xbox.py
+# exits on unplug; udev starts it again on the next plug
+Restart=no
