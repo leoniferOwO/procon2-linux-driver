@@ -48,7 +48,7 @@ for _f in ("libusb_bulk_transfer", "libusb_interrupt_transfer"):
     getattr(usb, _f).argtypes = [ctypes.c_void_p, ctypes.c_ubyte, ctypes.c_char_p, ctypes.c_int,
                                  ctypes.POINTER(ctypes.c_int), ctypes.c_uint]
 usb.libusb_close.argtypes = [ctypes.c_void_p]
-LIBUSB_ERROR_TIMEOUT = -7
+LIBUSB_ERROR_TIMEOUT, LIBUSB_ERROR_NO_DEVICE = -7, -4
 
 
 def bulk_cmd(h, cmd, reply_len=64):
@@ -149,8 +149,11 @@ def main():
             r = usb.libusb_interrupt_transfer(h, HID_EP_IN, buf, 64, ctypes.byref(n), 1000)
             if r == LIBUSB_ERROR_TIMEOUT:
                 continue
+            if r == LIBUSB_ERROR_NO_DEVICE:  # unplugged: normal exit, so systemd doesn't mark it failed
+                print("controller unplugged", flush=True)
+                return
             if r != 0:
-                sys.exit(f"controller disconnected ({r})")
+                sys.exit(f"USB read error ({r})")
             d = buf.raw[:n.value]
             if n.value < 12 or d[0] != 0x09:
                 continue
